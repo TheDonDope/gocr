@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  cli:
+    image: golang:latest
+    volumes:
+      - .:/go/src/gocr
+    working_dir: /go/src/gocr
+    command: go run ./cmd/gocr/main.go
