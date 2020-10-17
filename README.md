@@ -18,6 +18,7 @@ $ go build ./cmd/gocr
 ```shell
 $ go test -coverpkg=all ./... -coverprofile=coverage.out
 ?       github.com/TheDonDope/gocr/cmd/gocr     [no test files]
+?       github.com/TheDonDope/gocr/pkg/config   [no test files]
 ```
 
 - Open the results in the browser:
