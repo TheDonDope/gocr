@@ -236,10 +236,6 @@ coverage.out
 cp.html
 
 .vscode/*
-# !/govalues/**
-# cmd/govalues/output
-
-
-world_dump.json
-world.png
-main
+/gocr
+!/gocr/**
+cmd/gocr/output
