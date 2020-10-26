@@ -1,9 +1,22 @@
 version: "3.8"
-
 services:
-  cli:
-    image: golang:latest
+  db:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: 123
+    ports:
+      - 5432:5432
     volumes:
-      - .:/go/src/gocr
-    working_dir: /go/src/gocr
-    command: go run ./cmd/gocr/main.go
+      - type: bind
+        source: ./data
+        target: /var/lib/postgresql/data
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    restart: always
