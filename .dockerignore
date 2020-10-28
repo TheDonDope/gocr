@@ -237,6 +237,7 @@ site
 **/cp.html
 
 **/.vscode/*
-gocr
-!gocr/**
-**/cmd/gocr/output
+cli
+!cli/**
+**/cmd/cli/output
+server

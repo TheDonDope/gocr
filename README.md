@@ -4,10 +4,17 @@ An OCR CLI tool implemented in golang.
 
 ## Building
 
-- Build the main command:
+- Build the cli command:
 
 ```shell
-$ go build ./cmd/gocr
+$ go build ./cmd/cli
+<Empty output on build success>
+```
+
+- Build the server command:
+
+```shell
+$ go build ./cmd/server
 <Empty output on build success>
 ```
 
@@ -30,53 +37,70 @@ $ go tool cover -html=coverage.out
 
 ## Running with Docker
 
-- Build the image:
+- Build the server:
 
 ```shell
-$ docker-compose -p app build
-db uses an image, skipping
-Building app
-Step 1/11 : FROM golang:1.15-buster AS builder
+$ docker-compose -p server build
+Building server
+Step 1/12 : FROM golang:1.15-buster AS builder
  ---> 4a581cd6feb1
-Step 2/11 : WORKDIR /src
+Step 2/12 : LABEL maintainer="thedondope@hey.com"
  ---> Using cache
- ---> 7c57d3937172
-Step 3/11 : COPY go.mod go.sum ./
+ ---> de7bdc3fcadd
+Step 3/12 : WORKDIR /src
  ---> Using cache
- ---> 53fc8b956733
-Step 4/11 : RUN go mod download -x
+ ---> 4ce0250120de
+Step 4/12 : COPY go.mod go.sum ./
  ---> Using cache
- ---> e96e6b42503d
-Step 5/11 : COPY . ./
+ ---> b0ee6161c395
+Step 5/12 : RUN go mod download -x
  ---> Using cache
- ---> 984b656434d9
-Step 6/11 : RUN go build -v -o /bin/gocr cmd/gocr/*.go
+ ---> d94c6d082b1c
+Step 6/12 : COPY . ./
  ---> Using cache
- ---> b38ec08f321e
+ ---> 3f97a1d54c47
+Step 7/12 : RUN go build -v -o /bin/server cmd/server/*.go
+ ---> Using cache
+ ---> 6d76a0d114ec
 
-Step 7/11 : FROM debian:buster-slim
+Step 8/12 : FROM debian:buster-slim
  ---> f49666103347
-Step 8/11 : RUN set -x && apt-get update &&   DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates &&   rm -rf /var/lib/apt/lists/*
+Step 9/12 : RUN set -x && apt-get update &&   DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates &&   rm -rf /var/lib/apt/lists/*
  ---> Using cache
- ---> 75f328a5c1ae
-Step 9/11 : WORKDIR /app
+ ---> f79505d005ac
+Step 10/12 : WORKDIR /app
  ---> Using cache
- ---> 3540cb5d4a0a
-Step 10/11 : COPY --from=builder /bin/gocr ./
+ ---> a838cca6711f
+Step 11/12 : COPY --from=builder /bin/server ./
  ---> Using cache
- ---> 5d3446c67030
-Step 11/11 : CMD ["./gocr"]
+ ---> be056c36b528
+Step 12/12 : CMD ["./server"]
  ---> Using cache
- ---> 4a6c7788a63b
+ ---> d64a6d294da8
 
-Successfully built 4a6c7788a63b
-Successfully tagged app_app:latest
+Successfully built d64a6d294da8
+Successfully tagged server_server:latest
 ```
 
-- Run the app:
+- Run the server synchronous:
 
 ```shell
-$ docker-compose -p app up -d
-Creating app_db_1 ... done
-Creating app_app_1 ... done
+$ docker-compose -p server up
+Creating gocr-server ... done
+Attaching to gocr-server
+gocr-server | [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+gocr-server |
+gocr-server | [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+gocr-server |  - using env:     export GIN_MODE=release
+gocr-server |  - using code:    gin.SetMode(gin.ReleaseMode)
+gocr-server |
+gocr-server | [GIN-debug] GET    /healthy                  --> github.com/TheDonDope/gocr/pkg/http.Healthy (4 handlers)
+gocr-server | [GIN-debug] Listening and serving HTTP on :4242
+```
+
+- Run the server as a daemonized service:
+
+```shell
+$ docker-compose -p server up -d
+Starting gocr-server ... done
 ```

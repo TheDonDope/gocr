@@ -1,11 +1,12 @@
 FROM golang:1.15-buster AS builder
+LABEL maintainer="thedondope@hey.com"
 WORKDIR /src
 
 COPY go.mod go.sum ./
 RUN go mod download -x
 
 COPY . ./
-RUN go build -v -o /bin/gocr cmd/gocr/*.go
+RUN go build -v -o /bin/server cmd/server/*.go
 
 FROM debian:buster-slim
 RUN set -x && apt-get update && \
@@ -13,6 +14,6 @@ RUN set -x && apt-get update && \
   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY --from=builder /bin/gocr ./
+COPY --from=builder /bin/server ./
 
-CMD ["./gocr"]
+CMD ["./server"]
