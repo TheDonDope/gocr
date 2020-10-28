@@ -9,12 +9,6 @@ var (
 	domain   string
 )
 
-// SetAuthVariables reads the environment variables
-func SetAuthVariables() {
-	audience = "http://gocr-api" // FIXME: os.Getenv("AUTH0_API_IDENTIFIER")
-	domain = "localhost:4242"    // FIXME: os.Getenv("AUTH0_DOMAIN")
-}
-
 // CORSMiddleware returns the Handler Function for the CORS configuration.
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -29,4 +23,23 @@ func CORSMiddleware() gin.HandlerFunc {
 
 		c.Next()
 	}
+}
+
+// NewServer ...
+func NewServer() *gin.Engine {
+	setAuthVariables()
+	r := gin.Default()
+	r.Use(CORSMiddleware())
+
+	baseURL := r.Group("/gocr")
+	// authorized.Use(AuthRequired())
+	baseURL.GET("healthy", Healthy)
+
+	return r
+}
+
+// SetAuthVariables reads the environment variables
+func setAuthVariables() {
+	audience = "http://gocr-api" // FIXME: os.Getenv("AUTH0_API_IDENTIFIER")
+	domain = "localhost:4242"    // FIXME: os.Getenv("AUTH0_DOMAIN")
 }
