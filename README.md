@@ -1,5 +1,7 @@
 # gocr
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/74929ad9fdd64d3e844a4709e1c87924)](https://app.codacy.com/gh/TheDonDope/gocr?utm_source=github.com&utm_medium=referral&utm_content=TheDonDope/gocr&utm_campaign=Badge_Grade)
+
 An OCR CLI tool implemented in golang.
 
 ## Building
